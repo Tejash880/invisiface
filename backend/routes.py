@@ -23,43 +23,42 @@ security_mgr = SecurityManager()
 
 # --- HTML FRONTEND VIEW ROUTERS ---
 
-@main_views.route('/')
-@main_views.route('/api/index.py')
+@main_views.route('/', methods=['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'])
+@main_views.route('/api/index.py', methods=['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'])
 def index_page():
-    if request.args.get('debug'):
-        return jsonify({
-            'PATH_INFO': request.environ.get('PATH_INFO'),
-            'SCRIPT_NAME': request.environ.get('SCRIPT_NAME'),
-            'RAW_URI': request.environ.get('RAW_URI'),
-            'REQUEST_URI': request.environ.get('REQUEST_URI'),
-            'QUERY_STRING': request.environ.get('QUERY_STRING'),
-            'request_path': request.path,
-            'request_args': dict(request.args),
-            'headers': {k: v for k, v in request.headers.items()}
-        })
     subpath = request.args.get('path', '')
-    if subpath:
-        subpath = subpath.strip('/')
-        if subpath == 'dashboard':
-            return dashboard_page()
-        elif subpath == 'security':
-            return security_page()
-        elif subpath == 'history':
-            return history_page()
-        elif subpath == 'about':
-            return about_page()
-        elif subpath.startswith('result'):
-            parts = subpath.split('/')
-            job_id = int(parts[1]) if len(parts) > 1 and parts[1].isdigit() else None
-            return result_page(job_id)
-        elif subpath.startswith('integrity-report'):
-            parts = subpath.split('/')
-            job_id = int(parts[1]) if len(parts) > 1 and parts[1].isdigit() else None
-            return integrity_report_page(job_id)
-        elif subpath.startswith('ai-resistance-report'):
-            parts = subpath.split('/')
-            job_id = int(parts[1]) if len(parts) > 1 and parts[1].isdigit() else None
-            return ai_resistance_report_page(job_id)
+    if subpath and subpath not in ['/', '/api/index.py', '/api/index', '/api']:
+        subpath = subpath if subpath.startswith('/') else f"/{subpath}"
+        try:
+            urls = current_app.url_map.bind_to_environ(request.environ)
+            endpoint, values = urls.match(subpath, method=request.method)
+            if endpoint != 'main_views.index_page':
+                request.environ['PATH_INFO'] = subpath
+                view_func = current_app.view_functions[endpoint]
+                return view_func(**values)
+        except Exception:
+            # Fallback direct handlers for core views in case of matching edge cases
+            s = subpath.strip('/')
+            if s == 'dashboard':
+                return dashboard_page()
+            elif s == 'security':
+                return security_page()
+            elif s == 'history':
+                return history_page()
+            elif s == 'about':
+                return about_page()
+            elif s.startswith('result'):
+                parts = s.split('/')
+                job_id = int(parts[1]) if len(parts) > 1 and parts[1].isdigit() else None
+                return result_page(job_id)
+            elif s.startswith('integrity-report'):
+                parts = s.split('/')
+                job_id = int(parts[1]) if len(parts) > 1 and parts[1].isdigit() else None
+                return integrity_report_page(job_id)
+            elif s.startswith('ai-resistance-report'):
+                parts = s.split('/')
+                job_id = int(parts[1]) if len(parts) > 1 and parts[1].isdigit() else None
+                return ai_resistance_report_page(job_id)
     return render_template('index.html')
 
 @main_views.route('/dashboard')

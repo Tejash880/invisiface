@@ -36,6 +36,24 @@ def create_app(config_class=Config):
     def serve_encrypted(filename):
         return send_from_directory(str(Config.ENCRYPTED_FOLDER), filename)
 
+    # Wrap WSGI app with Vercel subpath rewrite handler
+    class VercelWSGIMiddleware:
+        def __init__(self, wsgi_app):
+            self.wsgi_app = wsgi_app
+
+        def __call__(self, environ, start_response):
+            query_string = environ.get('QUERY_STRING', '')
+            if 'path=' in query_string:
+                import urllib.parse
+                params = urllib.parse.parse_qs(query_string)
+                subpath = params.get('path', [None])[0]
+                if subpath:
+                    clean = subpath if subpath.startswith('/') else f"/{subpath}"
+                    environ['PATH_INFO'] = clean
+                    environ['SCRIPT_NAME'] = ''
+            return self.wsgi_app(environ, start_response)
+
+    app.wsgi_app = VercelWSGIMiddleware(app.wsgi_app)
     return app
 
 app = create_app()
