@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+
+{% block title %}Processing History – InvisiFace{% endblock %}
+
+{% block content %}
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+    <div>
+        <h1 style="font-size: 2rem; font-weight: 700;">SQLite Processing History Log</h1>
+        <p style="color: var(--text-muted); font-size: 0.95rem;">
+            Audit trail of all face anonymization runs, quantum simulation metadata, and cryptographic hashes.
+        </p>
+    </div>
+    <button class="btn btn-secondary" onclick="loadHistory()">
+        Refresh Log
+    </button>
+</div>
+
+<div class="card">
+    <div class="data-table-wrapper">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Timestamp</th>
+                    <th>Method</th>
+                    <th>Faces</th>
+                    <th>Privacy</th>
+                    <th>Quality</th>
+                    <th>Quantum Mode</th>
+                    <th>SHA-256 Hash</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody id="history-tbody">
+                <tr>
+                    <td colspan="9" style="text-align: center; color: var(--text-muted); padding: 2rem;">
+                        Loading history records from database...
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+async function loadHistory() {
+    const tbody = document.getElementById('history-tbody');
+    try {
+        const res = await fetch('/api/history');
+        const data = await res.json();
+        
+        if (!data || data.length === 0) {
+            tbody.innerHTML = `
+                <tr>
+                    <td colspan="9" style="text-align: center; color: var(--text-muted); padding: 2rem;">
+                        No processing history found in SQLite database. Upload an image to start!
+                    </td>
+                </tr>`;
+            return;
+        }
+
+        tbody.innerHTML = data.map(item => `
+            <tr>
+                <td style="font-family: var(--font-mono); font-weight: 700; color: var(--primary-cyan);">#${item.id}</td>
+                <td style="font-size: 0.8rem; color: var(--text-muted);">${new Date(item.timestamp).toLocaleString()}</td>
+                <td><span class="badge badge-cyan">${item.anonymization_method}</span></td>
+                <td>${item.face_count}</td>
+                <td style="font-weight: 700; color: var(--primary-cyan);">${item.privacy_score}%</td>
+                <td style="font-weight: 700; color: var(--shield-green);">${item.quality_score}%</td>
+                <td><span class="badge badge-purple">${item.quantum_mode}</span></td>
+                <td style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-dim);">${item.file_hash.substring(0, 12)}...</td>
+                <td>
+                    <a href="/results/${item.id}" class="btn btn-secondary" style="padding: 0.25rem 0.6rem; font-size: 0.78rem;">View Results</a>
+                </td>
+            </tr>
+        `).join('');
+    } catch (err) {
+        tbody.innerHTML = `
+            <tr>
+                <td colspan="9" style="text-align: center; color: var(--danger-red); padding: 2rem;">
+                    Failed to fetch processing history: ${err.message}
+                </td>
+            </tr>`;
+    }
+}
+
+document.addEventListener('DOMContentLoaded', loadHistory);
+</script>
+{% endblock %}

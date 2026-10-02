@@ -1,0 +1,151 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard – Quantum InvisiFace Pipeline{% endblock %}
+
+{% block content %}
+<div style="margin-bottom: 1.5rem;">
+    <h1 style="font-size: 2rem; font-weight: 700;">Quantum Face Protection Dashboard</h1>
+    <p style="color: var(--text-muted); font-size: 0.95rem;">
+        Imperceptible face protection driven by Qiskit Quantum Random Number Generation (QRNG) & Iterative Quality Gate.
+    </p>
+</div>
+
+<!-- Animated System Architecture Pipeline -->
+<div class="card" style="padding: 1.5rem 2rem;">
+    <div style="font-size: 0.8rem; font-family: var(--font-mono); color: var(--primary-cyan); margin-bottom: 0.8rem; text-transform: uppercase; font-weight: 700;">
+        ⚡ Exact System Architecture Pipeline
+    </div>
+    
+    <div class="pipeline-timeline" id="pipeline-timeline">
+        <div class="pipeline-step active" id="step-user">
+            <div class="step-icon">👤</div>
+            <div class="step-label">USER Upload</div>
+        </div>
+        <div class="pipeline-step" id="step-flask">
+            <div class="step-icon">🌐</div>
+            <div class="step-label">Flask Web API</div>
+        </div>
+        <div class="pipeline-step" id="step-preprocess">
+            <div class="step-icon">⚙️</div>
+            <div class="step-label">Preprocessing</div>
+        </div>
+        <div class="pipeline-step" id="step-qrng">
+            <div class="step-icon">⚛️</div>
+            <div class="step-label">Quantum QRNG</div>
+        </div>
+        <div class="pipeline-step" id="step-protection">
+            <div class="step-icon">🔒</div>
+            <div class="step-label">Face Protection</div>
+        </div>
+        <div class="pipeline-step" id="step-verification">
+            <div class="step-icon">📊</div>
+            <div class="step-label">Integrity & AI Test</div>
+        </div>
+        <div class="pipeline-step" id="step-output">
+            <div class="step-icon">✓</div>
+            <div class="step-label">Final Output</div>
+        </div>
+    </div>
+</div>
+
+<div style="display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 2rem;">
+    <!-- Left Column: Upload Dropzone & Face ROI Preview -->
+    <div>
+        <div class="card" id="upload-card">
+            <div class="card-header">
+                <h2 class="card-title">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l5-5 5 5h-3z"/>
+                    </svg>
+                    Upload Face Image
+                </h2>
+                <span class="badge badge-cyan">JPG / PNG / WEBP</span>
+            </div>
+
+            <div class="upload-dropzone" id="dropzone">
+                <input type="file" id="file-input" accept="image/jpeg,image/png,image/webp" style="display: none;">
+                <div class="upload-icon">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M9 16h6v-6h4l-7-7-7 7h4v6zm-4 2h14v2H5v-2z"/>
+                    </svg>
+                </div>
+                <div class="upload-title">Drag & Drop face image here</div>
+                <div class="upload-sub">Original image is strictly preserved and never overwritten</div>
+                <button class="btn btn-secondary" onclick="document.getElementById('file-input').click()">
+                    Browse Computer
+                </button>
+            </div>
+
+            <div id="upload-summary" style="display: none; margin-top: 1.5rem;">
+                <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(0, 243, 255, 0.05); padding: 0.8rem 1.2rem; border-radius: 8px; border: 1px solid var(--border-color); margin-bottom: 1rem;">
+                    <div>
+                        <div style="font-weight: 600;" id="file-name-txt">sample.jpg</div>
+                        <div style="font-size: 0.8rem; color: var(--text-muted);" id="file-meta-txt">1920x1080 px</div>
+                    </div>
+                    <div>
+                        <span class="badge badge-purple" id="faces-detected-badge">Faces Detected: 0</span>
+                    </div>
+                </div>
+
+                <div class="preview-img-wrapper">
+                    <img id="detected-preview-img" src="" alt="Detected Faces Preview">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Right Column: Quantum & Quality Gate Settings -->
+    <div>
+        <div class="card">
+            <div class="card-header">
+                <h2 class="card-title">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/>
+                    </svg>
+                    Protection Execution Controls
+                </h2>
+            </div>
+
+            <!-- Quantum Random Status Card -->
+            <div style="background: rgba(10, 16, 28, 0.7); padding: 1rem; border-radius: 10px; border: 1px solid var(--border-color); margin-bottom: 1.5rem;">
+                <div style="font-size: 0.8rem; font-family: var(--font-mono); color: var(--quantum-purple); font-weight: 700; margin-bottom: 0.4rem;">
+                    ⚛️ QUANTUM RANDOM NUMBER GENERATOR
+                </div>
+                <div style="display: flex; justify-content: space-between; font-size: 0.85rem; color: var(--text-muted);">
+                    <span>Backend: <strong>Qiskit Aer Simulation</strong></span>
+                    <span class="badge badge-purple">8 QUBITS</span>
+                </div>
+                <div style="font-size: 0.75rem; color: var(--text-dim); margin-top: 0.4rem;">
+                    Generates true quantum superposition measurement bitstrings to seed protection.
+                </div>
+            </div>
+
+            <!-- Iterative Quality Gate Card -->
+            <div style="background: rgba(10, 16, 28, 0.7); padding: 1rem; border-radius: 10px; border: 1px solid var(--border-color); margin-bottom: 1.5rem;">
+                <div style="font-size: 0.8rem; font-family: var(--font-mono); color: var(--shield-green); font-weight: 700; margin-bottom: 0.4rem;">
+                    🛡️ ITERATIVE QUALITY GATE
+                </div>
+                <div style="display: flex; justify-content: space-between; font-size: 0.85rem; color: var(--text-muted);">
+                    <span>Target SSIM Threshold:</span>
+                    <span style="font-family: var(--font-mono); color: var(--shield-green); font-weight: 700;">SSIM ≥ 0.90</span>
+                </div>
+                <div style="font-size: 0.75rem; color: var(--text-dim); margin-top: 0.4rem;">
+                    No Gaussian blur or visible pixelation. Preserves natural human visual appearance.
+                </div>
+            </div>
+
+            <button class="btn btn-primary" id="process-btn" style="width: 100%; padding: 0.9rem;" disabled onclick="executeQuantumProtection()">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-5.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L9 14.17l7.59-7.59L18 8l-9 9z"/>
+                </svg>
+                Start Quantum Face Protection
+            </button>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/upload.js') }}"></script>
+<script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+{% endblock %}

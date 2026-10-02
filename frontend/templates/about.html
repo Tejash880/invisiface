@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block title %}About & Architecture – InvisiFace{% endblock %}
+
+{% block content %}
+<div style="margin-bottom: 2rem;">
+    <h1 style="font-size: 2rem; font-weight: 700;">System Architecture & Technical Specifications</h1>
+    <p style="color: var(--text-muted); font-size: 0.95rem;">
+        Complete breakdown of Artificial Intelligence, Qiskit Quantum Computing, Computer Vision, and Cryptographic components.
+    </p>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <h2 class="card-title">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/>
+            </svg>
+            InvisiFace Technological Foundations
+        </h2>
+    </div>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem;">
+        <div style="background: rgba(10, 16, 28, 0.6); padding: 1.4rem; border-radius: 12px; border: 1px solid var(--border-color);">
+            <h3 style="color: var(--primary-cyan); margin-bottom: 0.6rem;">1. OpenCV Computer Vision</h3>
+            <p style="font-size: 0.9rem; color: var(--text-muted);">
+                Face detection is performed via multi-scale Haar Cascades and OpenCV equalized grayscale matrix processing. Bounding box coordinates are extracted to isolate facial Regions of Interest (ROI) while preserving surrounding hair, clothing, background, and lighting.
+            </p>
+        </div>
+
+        <div style="background: rgba(10, 16, 28, 0.6); padding: 1.4rem; border-radius: 12px; border: 1px solid var(--border-color);">
+            <h3 style="color: var(--quantum-purple); margin-bottom: 0.6rem;">2. Qiskit Quantum Feature Mapping</h3>
+            <p style="font-size: 0.9rem; color: var(--text-muted);">
+                A 4-dimensional normalized feature vector (brightness, spatial contrast, area ratio, edge density) is encoded into rotation angles $\theta_i = \pi \times f_i$ across 4 qubits. Entangling $CZ$ quantum gates evaluate feature correlations via Qiskit Aer local simulation.
+            </p>
+        </div>
+
+        <div style="background: rgba(10, 16, 28, 0.6); padding: 1.4rem; border-radius: 12px; border: 1px solid var(--border-color);">
+            <h3 style="color: var(--shield-green); margin-bottom: 0.6rem;">3. AES-256-GCM Cryptography</h3>
+            <p style="font-size: 0.9rem; color: var(--text-muted);">
+                Processed images are encrypted into `.enc` binary packages using AES-256-GCM with a 12-byte secure random nonce. SHA-256 digests ensure end-to-end file integrity and protection against unauthorized tampering.
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}

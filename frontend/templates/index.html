@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+
+{% block title %}InvisiFace – Quantum-Enhanced Digital Identity Protection{% endblock %}
+
+{% block content %}
+<section class="hero-section">
+    <div class="hero-badges">
+        <span class="hero-badge">⚡ OpenCV Computer Vision</span>
+        <span class="hero-badge">⚛️ Qiskit Quantum Simulation</span>
+        <span class="hero-badge">🔒 AES-256-GCM Encryption</span>
+    </div>
+    <h1 class="hero-title">Protect Your Digital Identity with Quantum-Enhanced Anonymization</h1>
+    <p class="hero-subtitle">
+        InvisiFace automatically detects faces in images and applies privacy-preserving facial transformations guided by Qiskit quantum circuit simulations while preserving natural background visual quality.
+    </p>
+
+    <div style="display: flex; gap: 1.2rem; justify-content: center;">
+        <a href="/dashboard" class="btn btn-primary">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M9 16h6v-6h4l-7-7-7 7h4v6zm-4 2h14v2H5v-2z"/>
+            </svg>
+            Launch Anonymization Dashboard
+        </a>
+        <a href="/about" class="btn btn-secondary">Learn Technical Architecture</a>
+    </div>
+</section>
+
+<div class="metrics-grid">
+    <div class="metric-card">
+        <div class="metric-label">AI Face Detection</div>
+        <div class="metric-value" style="color: var(--primary-cyan);">Single & Multi</div>
+        <div class="metric-sub">OpenCV Bounding Box ROI Extraction</div>
+    </div>
+    <div class="metric-card purple">
+        <div class="metric-label">Quantum Optimization</div>
+        <div class="metric-value" style="color: var(--quantum-purple);">4 Qubits</div>
+        <div class="metric-sub">Qiskit Parameterized Circuit Simulation</div>
+    </div>
+    <div class="metric-card green">
+        <div class="metric-label">Cryptographic Protection</div>
+        <div class="metric-value" style="color: var(--shield-green);">AES-256-GCM</div>
+        <div class="metric-sub">Authenticated Nonce & SHA-256 Checksum</div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <h2 class="card-title">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/>
+            </svg>
+            How InvisiFace Protects Your Images
+        </h2>
+    </div>
+    
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem;">
+        <div style="background: rgba(10, 15, 26, 0.6); padding: 1.2rem; border-radius: 10px; border: 1px solid var(--border-color);">
+            <h3 style="color: var(--primary-cyan); margin-bottom: 0.5rem; font-size: 1.1rem;">1. Automatic Face Detection</h3>
+            <p style="font-size: 0.9rem; color: var(--text-muted);">
+                OpenCV scans uploaded images to detect single or multiple faces, extracting facial bounding box coordinates and ROI feature statistics.
+            </p>
+        </div>
+
+        <div style="background: rgba(10, 15, 26, 0.6); padding: 1.2rem; border-radius: 10px; border: 1px solid var(--border-color);">
+            <h3 style="color: var(--quantum-purple); margin-bottom: 0.5rem; font-size: 1.1rem;">2. Quantum Feature Encoding</h3>
+            <p style="font-size: 0.9rem; color: var(--text-muted);">
+                Normalized facial features (brightness, contrast, area ratio, edge density) are mapped into a 4-qubit Qiskit quantum circuit to guide privacy parameter selection.
+            </p>
+        </div>
+
+        <div style="background: rgba(10, 15, 26, 0.6); padding: 1.2rem; border-radius: 10px; border: 1px solid var(--border-color);">
+            <h3 style="color: var(--shield-green); margin-bottom: 0.5rem; font-size: 1.1rem;">3. Natural Mask Blending</h3>
+            <p style="font-size: 0.9rem; color: var(--text-muted);">
+                Anonymization transforms (Gaussian blur, pixelation, identity scrambling) are applied strictly inside facial regions with feathered elliptical mask blending.
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}

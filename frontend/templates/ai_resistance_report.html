@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+
+{% block title %}AI Resistance Evaluation Report – Quantum InvisiFace{% endblock %}
+
+{% block content %}
+<div style="margin-bottom: 2rem;">
+    <h1 style="font-size: 2rem; font-weight: 700;">AI Resistance Evaluation Report</h1>
+    <p style="color: var(--text-muted); font-size: 0.95rem;">
+        Controlled evaluation measuring identity representation similarity and separation across AI recognition models.
+    </p>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <h2 class="card-title" style="color: var(--quantum-purple);">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/>
+            </svg>
+            Evaluated Recognition Models
+        </h2>
+        <span class="badge badge-purple" id="air-proxy">Recognition Resistance Proxy: --/100</span>
+    </div>
+
+    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem; text-align: center; font-family: var(--font-mono);">
+        <div style="background: rgba(10, 16, 28, 0.7); padding: 1.2rem; border-radius: 10px; border: 1px solid var(--border-color);">
+            <div style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.3rem;">DEEPFACE EVALUATION</div>
+            <div style="font-weight: 700; color: var(--text-main);" id="air-deepface">NOT AVAILABLE</div>
+        </div>
+
+        <div style="background: rgba(10, 16, 28, 0.7); padding: 1.2rem; border-radius: 10px; border: 1px solid var(--border-color);">
+            <div style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.3rem;">FACENET EVALUATION</div>
+            <div style="font-weight: 700; color: var(--text-main);" id="air-facenet">NOT AVAILABLE</div>
+        </div>
+
+        <div style="background: rgba(10, 16, 28, 0.7); padding: 1.2rem; border-radius: 10px; border: 1px solid var(--border-color);">
+            <div style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.3rem;">RECOGNITION ATTEMPT</div>
+            <div style="font-weight: 700; color: var(--shield-green);" id="air-rec">COMPLETED</div>
+        </div>
+    </div>
+
+    <div style="background: rgba(10, 16, 28, 0.5); padding: 1rem; border-radius: 8px; font-size: 0.82rem; color: var(--text-dim); line-height: 1.5;">
+        <strong>Disclaimer:</strong> Evaluation metrics apply exclusively to the selected/available evaluation models. InvisiFace does not claim guaranteed immunity against all external facial recognition systems or future AI models.
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', async () => {
+    const pathParts = window.location.pathname.split('/');
+    const jobId = pathParts[pathParts.length - 1];
+    if (!jobId || isNaN(jobId)) return;
+
+    try {
+        const res = await fetch(`/api/ai-report/${jobId}`);
+        const data = await res.json();
+        if (res.ok) {
+            document.getElementById('air-proxy').textContent = `Recognition Resistance Proxy: ${data.recognition_resistance_proxy}/100`;
+            if (data.models_evaluated.deepface) {
+                document.getElementById('air-deepface').textContent = data.models_evaluated.deepface.status;
+            }
+            if (data.models_evaluated.facenet) {
+                document.getElementById('air-facenet').textContent = data.models_evaluated.facenet.status;
+            }
+        }
+    } catch (e) {
+        console.error('Error fetching AI resistance report:', e);
+    }
+});
+</script>
+{% endblock %}

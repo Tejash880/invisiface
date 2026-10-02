@@ -1,0 +1,157 @@
+{% extends "base.html" %}
+
+{% block title %}Final Protection Output – Quantum InvisiFace{% endblock %}
+
+{% block content %}
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+    <div>
+        <h1 style="font-size: 2rem; font-weight: 700;">Quantum Face Protection Final Output</h1>
+        <p style="color: var(--text-muted); font-size: 0.95rem;">
+            Job ID: <span id="res-job-id" style="font-family: var(--font-mono); color: var(--primary-cyan);">#...</span>
+        </p>
+    </div>
+
+    <div style="display: flex; gap: 1rem;">
+        <a href="" id="download-output-btn" class="btn btn-primary" download>
+            Download Protected Image
+        </a>
+        <a href="" id="download-enc-btn" class="btn btn-purple" download>
+            Download Encrypted Package (.enc)
+        </a>
+    </div>
+</div>
+
+<!-- =========================================================================
+     OUTPUT 1: PROTECTED IMAGE (Interactive Split Slider)
+     ========================================================================= -->
+<div class="card">
+    <div class="card-header">
+        <h2 class="card-title">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/>
+            </svg>
+            1. Protected Image (Interactive Original vs Protected Split Slider)
+        </h2>
+        <span class="badge badge-green" id="res-faces-badge">Faces Protected: --</span>
+    </div>
+
+    <div style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1rem;">
+        Human visual appearance, pose, expression, lighting, skin appearance, and background composition are preserved. No obvious Gaussian blur or visible pixelation.
+    </div>
+
+    <div class="split-slider-container" id="split-container">
+        <!-- Right Image: Protected Image -->
+        <img src="" id="split-img-after" class="split-img" alt="Protected Image">
+
+        <!-- Left Overlay Image: Original Image -->
+        <div class="split-img-overlay" id="split-overlay">
+            <img src="" id="split-img-before" alt="Original Image">
+        </div>
+
+        <div class="split-handle" id="split-handle">
+            <div class="split-handle-btn">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/>
+                </svg>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+    <!-- =========================================================================
+         OUTPUT 2: INTEGRITY REPORT
+         ========================================================================= -->
+    <div class="card">
+        <div class="card-header">
+            <h2 class="card-title" style="color: var(--shield-green);">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-5.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L9 14.17l7.59-7.59L18 8l-9 9z"/>
+                </svg>
+                2. Integrity Verification Report
+            </h2>
+            <span class="badge badge-green" id="report-integrity-status">VERIFIED</span>
+        </div>
+
+        <table style="width: 100%; border-collapse: collapse; font-size: 0.9rem; font-family: var(--font-mono);">
+            <tr style="border-bottom: 1px solid rgba(255,255,255,0.08);">
+                <td style="padding: 0.75rem 0; color: var(--text-muted);">SHA-256 HASH</td>
+                <td style="padding: 0.75rem 0; text-align: right; color: var(--shield-green); word-break: break-all;" id="val-sha256">--</td>
+            </tr>
+            <tr style="border-bottom: 1px solid rgba(255,255,255,0.08);">
+                <td style="padding: 0.75rem 0; color: var(--text-muted);">WATERMARK CHECK</td>
+                <td style="padding: 0.75rem 0; text-align: right;" id="val-watermark-status"><span class="badge badge-green">VALID</span></td>
+            </tr>
+            <tr style="border-bottom: 1px solid rgba(255,255,255,0.08);">
+                <td style="padding: 0.75rem 0; color: var(--text-muted);">STRUCTURAL SSIM</td>
+                <td style="padding: 0.75rem 0; text-align: right; color: var(--primary-cyan); font-weight: 700;" id="val-ssim">--</td>
+            </tr>
+            <tr style="border-bottom: 1px solid rgba(255,255,255,0.08);">
+                <td style="padding: 0.75rem 0; color: var(--text-muted);">PEAK SIGNAL-TO-NOISE (PSNR)</td>
+                <td style="padding: 0.75rem 0; text-align: right; color: var(--primary-cyan);" id="val-psnr">-- dB</td>
+            </tr>
+            <tr>
+                <td style="padding: 0.75rem 0; color: var(--text-muted);">STORAGE CIPHER</td>
+                <td style="padding: 0.75rem 0; text-align: right; color: var(--text-main);">AES-256-GCM</td>
+            </tr>
+        </table>
+    </div>
+
+    <!-- =========================================================================
+         OUTPUT 3: AI RESISTANCE EVALUATION REPORT
+         ========================================================================= -->
+    <div class="card">
+        <div class="card-header">
+            <h2 class="card-title" style="color: var(--quantum-purple);">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/>
+                </svg>
+                3. AI Resistance Evaluation Report
+            </h2>
+            <span class="badge badge-purple" id="val-rec-proxy">Proxy: --/100</span>
+        </div>
+
+        <div style="margin-bottom: 1rem; font-size: 0.88rem; color: var(--text-muted);">
+            Evaluated identity representation distance against selected recognition models:
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.8rem; margin-bottom: 1rem; text-align: center; font-family: var(--font-mono);">
+            <div style="background: rgba(10, 16, 28, 0.7); padding: 0.8rem; border-radius: 8px;">
+                <div style="font-size: 0.7rem; color: var(--text-muted);">DEEPFACE</div>
+                <div style="font-size: 0.8rem; font-weight: 700; color: var(--text-main); margin-top: 0.2rem;" id="val-deepface-status">NOT AVAILABLE</div>
+            </div>
+            <div style="background: rgba(10, 16, 28, 0.7); padding: 0.8rem; border-radius: 8px;">
+                <div style="font-size: 0.7rem; color: var(--text-muted);">FACENET</div>
+                <div style="font-size: 0.8rem; font-weight: 700; color: var(--text-main); margin-top: 0.2rem;" id="val-facenet-status">NOT AVAILABLE</div>
+            </div>
+            <div style="background: rgba(10, 16, 28, 0.7); padding: 0.8rem; border-radius: 8px;">
+                <div style="font-size: 0.7rem; color: var(--text-muted);">RECOGNITION ATTEMPT</div>
+                <div style="font-size: 0.8rem; font-weight: 700; color: var(--shield-green); margin-top: 0.2rem;" id="val-rec-status">COMPLETED</div>
+            </div>
+        </div>
+
+        <table style="width: 100%; border-collapse: collapse; font-size: 0.85rem; font-family: var(--font-mono);">
+            <tr style="border-bottom: 1px solid rgba(255,255,255,0.08);">
+                <td style="padding: 0.5rem 0; color: var(--text-muted);">Original Identity Similarity</td>
+                <td style="padding: 0.5rem 0; text-align: right; color: var(--text-main);">100.0%</td>
+            </tr>
+            <tr style="border-bottom: 1px solid rgba(255,255,255,0.08);">
+                <td style="padding: 0.5rem 0; color: var(--text-muted);">Protected Identity Similarity</td>
+                <td style="padding: 0.5rem 0; text-align: right; color: var(--quantum-purple); font-weight: 700;" id="val-identity-after">--%</td>
+            </tr>
+            <tr>
+                <td style="padding: 0.5rem 0; color: var(--text-muted);">Identity Separation</td>
+                <td style="padding: 0.5rem 0; text-align: right; color: var(--shield-green); font-weight: 700;" id="val-identity-separation">+--%</td>
+            </tr>
+        </table>
+
+        <div style="margin-top: 0.8rem; font-size: 0.75rem; color: var(--text-dim);">
+            <em>Disclaimer: Evaluation applies only to selected/available models. Does not claim guaranteed protection against every facial recognition system.</em>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/results.js') }}"></script>
+{% endblock %}

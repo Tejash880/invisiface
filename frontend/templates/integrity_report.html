@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+
+{% block title %}Integrity Verification Report – Quantum InvisiFace{% endblock %}
+
+{% block content %}
+<div style="margin-bottom: 2rem;">
+    <h1 style="font-size: 2rem; font-weight: 700;">Integrity Verification Report</h1>
+    <p style="color: var(--text-muted); font-size: 0.95rem;">
+        Cryptographic SHA-256 hash, invisible watermark check, and mathematical SSIM/PSNR verification.
+    </p>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <h2 class="card-title" style="color: var(--shield-green);">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-5.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L9 14.17l7.59-7.59L18 8l-9 9z"/>
+            </svg>
+            Verification Audit Summary
+        </h2>
+        <span class="badge badge-green" id="ir-status">VERIFIED</span>
+    </div>
+
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; font-family: var(--font-mono); font-size: 0.9rem;">
+        <div style="background: rgba(10, 16, 28, 0.7); padding: 1.2rem; border-radius: 10px; border: 1px solid var(--border-color);">
+            <div style="color: var(--text-muted); font-size: 0.8rem; margin-bottom: 0.4rem;">SHA-256 IMAGE CHECKSUM</div>
+            <div id="ir-sha256" style="color: var(--shield-green); word-break: break-all;">--</div>
+        </div>
+
+        <div style="background: rgba(10, 16, 28, 0.7); padding: 1.2rem; border-radius: 10px; border: 1px solid var(--border-color);">
+            <div style="color: var(--text-muted); font-size: 0.8rem; margin-bottom: 0.4rem;">WATERMARK STATUS</div>
+            <div id="ir-watermark"><span class="badge badge-green">VALID</span></div>
+        </div>
+
+        <div style="background: rgba(10, 16, 28, 0.7); padding: 1.2rem; border-radius: 10px; border: 1px solid var(--border-color);">
+            <div style="color: var(--text-muted); font-size: 0.8rem; margin-bottom: 0.4rem;">STRUCTURAL SSIM (QUALITY GATE)</div>
+            <div id="ir-ssim" style="color: var(--primary-cyan); font-size: 1.4rem; font-weight: 700;">--</div>
+        </div>
+
+        <div style="background: rgba(10, 16, 28, 0.7); padding: 1.2rem; border-radius: 10px; border: 1px solid var(--border-color);">
+            <div style="color: var(--text-muted); font-size: 0.8rem; margin-bottom: 0.4rem;">PSNR FIDELITY</div>
+            <div id="ir-psnr" style="color: var(--primary-cyan); font-size: 1.4rem; font-weight: 700;">-- dB</div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', async () => {
+    const pathParts = window.location.pathname.split('/');
+    const jobId = pathParts[pathParts.length - 1];
+    if (!jobId || isNaN(jobId)) return;
+
+    try {
+        const res = await fetch(`/api/integrity-report/${jobId}`);
+        const data = await res.json();
+        if (res.ok) {
+            document.getElementById('ir-sha256').textContent = data.sha256_hash;
+            document.getElementById('ir-watermark').innerHTML = `<span class="badge badge-green">${data.watermark_status}</span>`;
+            document.getElementById('ir-ssim').textContent = data.ssim;
+            document.getElementById('ir-psnr').textContent = `${data.psnr_db} dB`;
+            document.getElementById('ir-status').textContent = data.integrity_status;
+        }
+    } catch (e) {
+        console.error('Error fetching integrity report:', e);
+    }
+});
+</script>
+{% endblock %}
