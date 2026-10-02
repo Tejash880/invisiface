@@ -8,8 +8,9 @@ def create_app(config_class=Config):
     """Application factory for InvisiFace Flask application."""
     app = Flask(
         __name__,
-        template_folder='frontend/templates',
-        static_folder='frontend/static'
+        template_folder=os.path.join(os.path.dirname(__file__), 'frontend', 'templates'),
+        static_folder=os.path.join(os.path.dirname(__file__), 'frontend', 'static'),
+        static_url_path='/static'
     )
     
     app.config.from_object(config_class)
@@ -25,15 +26,15 @@ def create_app(config_class=Config):
     # Serve static assets from uploads, outputs, and encrypted directories for frontend display
     @app.route('/media/uploads/<path:filename>')
     def serve_uploads(filename):
-        return send_from_directory(Config.UPLOAD_FOLDER, filename)
+        return send_from_directory(str(Config.UPLOAD_FOLDER), filename)
 
     @app.route('/media/outputs/<path:filename>')
     def serve_outputs(filename):
-        return send_from_directory(Config.OUTPUT_FOLDER, filename)
+        return send_from_directory(str(Config.OUTPUT_FOLDER), filename)
 
     @app.route('/media/encrypted/<path:filename>')
     def serve_encrypted(filename):
-        return send_from_directory(Config.ENCRYPTED_FOLDER, filename)
+        return send_from_directory(str(Config.ENCRYPTED_FOLDER), filename)
 
     return app
 

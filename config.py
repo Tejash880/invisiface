@@ -7,16 +7,19 @@ from dotenv import load_dotenv
 BASE_DIR = Path(__file__).resolve().parent
 load_dotenv(BASE_DIR / '.env')
 
+IS_VERCEL = bool(os.getenv('VERCEL') or os.getenv('AWS_LAMBDA_FUNCTION_NAME'))
+STORAGE_DIR = Path('/tmp') if IS_VERCEL else BASE_DIR
+
 class Config:
     SECRET_KEY = os.getenv('SECRET_KEY', secrets.token_hex(32))
     
     # Folders
     BASE_DIR = BASE_DIR
-    UPLOAD_FOLDER = BASE_DIR / 'uploads'
-    OUTPUT_FOLDER = BASE_DIR / 'outputs'
-    ENCRYPTED_FOLDER = BASE_DIR / 'encrypted'
+    UPLOAD_FOLDER = STORAGE_DIR / 'uploads'
+    OUTPUT_FOLDER = STORAGE_DIR / 'outputs'
+    ENCRYPTED_FOLDER = STORAGE_DIR / 'encrypted'
     DEMO_FOLDER = BASE_DIR / 'demo_images'
-    INSTANCE_FOLDER = BASE_DIR / 'instance'
+    INSTANCE_FOLDER = STORAGE_DIR / 'instance'
     
     # Database
     SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL', f"sqlite:///{INSTANCE_FOLDER / 'invisiface.db'}")
@@ -38,9 +41,14 @@ class Config:
     @classmethod
     def init_app(cls):
         """Ensure all required runtime directories exist."""
-        for folder in [cls.UPLOAD_FOLDER, cls.OUTPUT_FOLDER, cls.ENCRYPTED_FOLDER, cls.DEMO_FOLDER, cls.INSTANCE_FOLDER]:
-            folder.mkdir(parents=True, exist_ok=True)
-            # Create .gitkeep files if directory is empty
-            gitkeep = folder / '.gitkeep'
-            if not gitkeep.exists():
-                gitkeep.touch()
+        folders = [cls.UPLOAD_FOLDER, cls.OUTPUT_FOLDER, cls.ENCRYPTED_FOLDER, cls.INSTANCE_FOLDER]
+        if not IS_VERCEL:
+            folders.append(cls.DEMO_FOLDER)
+        for folder in folders:
+            try:
+                folder.mkdir(parents=True, exist_ok=True)
+                gitkeep = folder / '.gitkeep'
+                if not gitkeep.exists():
+                    gitkeep.touch()
+            except Exception as e:
+                print(f"Directory initialization notice for {folder}: {e}")
