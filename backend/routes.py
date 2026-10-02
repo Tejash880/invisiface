@@ -24,6 +24,7 @@ security_mgr = SecurityManager()
 # --- HTML FRONTEND VIEW ROUTERS ---
 
 @main_views.route('/')
+@main_views.route('/api/index.py')
 def index_page():
     return render_template('index.html')
 
