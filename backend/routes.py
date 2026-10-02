@@ -26,6 +26,17 @@ security_mgr = SecurityManager()
 @main_views.route('/')
 @main_views.route('/api/index.py')
 def index_page():
+    if request.args.get('debug'):
+        return jsonify({
+            'PATH_INFO': request.environ.get('PATH_INFO'),
+            'SCRIPT_NAME': request.environ.get('SCRIPT_NAME'),
+            'RAW_URI': request.environ.get('RAW_URI'),
+            'REQUEST_URI': request.environ.get('REQUEST_URI'),
+            'QUERY_STRING': request.environ.get('QUERY_STRING'),
+            'request_path': request.path,
+            'request_args': dict(request.args),
+            'headers': {k: v for k, v in request.headers.items()}
+        })
     subpath = request.args.get('path', '')
     if subpath:
         subpath = subpath.strip('/')
