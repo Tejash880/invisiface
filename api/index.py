@@ -17,13 +17,21 @@ class VercelWSGIMiddleware:
         query_string = environ.get('QUERY_STRING', '')
         params = urllib.parse.parse_qs(query_string)
         subpath = params.get('path', [None])[0]
-        
+
         if subpath:
             clean = subpath if subpath.startswith('/') else f"/{subpath}"
-            environ['PATH_INFO'] = clean
-        elif environ.get('PATH_INFO') in ['/api/index.py', '/api/index', '/api', '']:
-            environ['PATH_INFO'] = '/'
-            
+        elif environ.get('PATH_INFO') in ['/api/index.py', '/api/index', '/api']:
+            clean = '/'
+        else:
+            clean = environ.get('PATH_INFO', '/')
+
+        environ['PATH_INFO'] = clean
+        environ['SCRIPT_NAME'] = ''
+        if 'REQUEST_URI' in environ:
+            environ['REQUEST_URI'] = clean
+        if 'RAW_URI' in environ:
+            environ['RAW_URI'] = clean
+
         return self.wsgi_app(environ, start_response)
 
 app.wsgi_app = VercelWSGIMiddleware(app.wsgi_app)

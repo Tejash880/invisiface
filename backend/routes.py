@@ -26,6 +26,29 @@ security_mgr = SecurityManager()
 @main_views.route('/')
 @main_views.route('/api/index.py')
 def index_page():
+    subpath = request.args.get('path', '')
+    if subpath:
+        subpath = subpath.strip('/')
+        if subpath == 'dashboard':
+            return dashboard_page()
+        elif subpath == 'security':
+            return security_page()
+        elif subpath == 'history':
+            return history_page()
+        elif subpath == 'about':
+            return about_page()
+        elif subpath.startswith('result'):
+            parts = subpath.split('/')
+            job_id = int(parts[1]) if len(parts) > 1 and parts[1].isdigit() else None
+            return result_page(job_id)
+        elif subpath.startswith('integrity-report'):
+            parts = subpath.split('/')
+            job_id = int(parts[1]) if len(parts) > 1 and parts[1].isdigit() else None
+            return integrity_report_page(job_id)
+        elif subpath.startswith('ai-resistance-report'):
+            parts = subpath.split('/')
+            job_id = int(parts[1]) if len(parts) > 1 and parts[1].isdigit() else None
+            return ai_resistance_report_page(job_id)
     return render_template('index.html')
 
 @main_views.route('/dashboard')
